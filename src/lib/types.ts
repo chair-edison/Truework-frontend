@@ -133,6 +133,9 @@ export type CreateJobCheckRequest =
   | { input_type: "TEXT" | "URL"; content: string }
   | { input_type: "SCREENSHOT"; upload_id: string };
 
+/** POST /job-checks?language= — 검사 결과 문구 언어 */
+export type CheckLanguage = "english" | "korean" | "vietnamese";
+
 export type UploadResponse = { upload_id: string; expires_at: string };
 
 export const CHECK_PROGRESS = ["QUEUED", "EXTRACTING", "VERIFYING", "EXPLAINING"] as const;

@@ -9,7 +9,10 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, title: "Truework", statusBarStyle: "default" },
   icons: {
-    icon: [{ url: "/icons/icon.svg", type: "image/svg+xml" }],
+    icon: [
+      { url: "/icons/icon.svg", type: "image/svg+xml" },
+      { url: "/pwa-icon/32", type: "image/png", sizes: "32x32" }, // SVG 파비콘 미지원 브라우저용
+    ],
     apple: [{ url: "/pwa-icon/180", sizes: "180x180" }],
   },
   formatDetection: { telephone: false },

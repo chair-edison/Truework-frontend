@@ -27,8 +27,8 @@ const METHODS: { type: CheckInputType; Icon: LucideIcon }[] = [
 // 입력 초안은 메모리에만 보관한다(오류·화면 이동 후에도 유지, 디스크에는 남기지 않음).
 // uploadId: 업로드 후 검사 생성이 실패했을 때 같은 업로드를 재사용(1회용, 24시간 유효)
 // idemKey: 같은 입력으로 재시도하면 같은 키를 보내 중복 검사를 막는다.
-const draft: { method: CheckInputType; url: string; text: string; file: File | null; uploadId: string | null; idemKey: string | null } = {
-  method: "SCREENSHOT", url: "", text: "", file: null, uploadId: null, idemKey: null,
+const draft: { method: CheckInputType; url: string; text: string; file: File | null; uploadId: string | null; idemKey: string | null; idemLang: string | null } = {
+  method: "SCREENSHOT", url: "", text: "", file: null, uploadId: null, idemKey: null, idemLang: null,
 };
 
 /** API: 사용자 정보와 별도 포트가 없는 HTTPS URL */
@@ -44,7 +44,7 @@ function isAcceptableUrl(raw: string) {
 type Phase = "idle" | "compressing" | "uploading" | "submitting";
 
 export default function CheckInputPage() {
-  const { dict, intl } = useI18n();
+  const { dict, intl, locale } = useI18n();
   const router = useRouter();
   const { session, ready, requireLogin } = useAuth();
   const [method, setMethod] = useState<CheckInputType>(draft.method);
@@ -125,6 +125,9 @@ export default function CheckInputPage() {
         body = { input_type: method, content: method === "URL" ? url.trim() : text };
       }
       setPhase("submitting");
+      // 같은 키로 다른 언어를 요청하면 기존 검사가 반환되므로 언어도 키에 묶는다
+      if (draft.idemLang !== locale) draft.idemKey = null;
+      draft.idemLang = locale;
       draft.idemKey ??= newIdempotencyKey();
       const res = await api.createCheck(body, draft.idemKey);
       addCheckRef({ id: res.check_id, input_type: method, created_at: new Date().toISOString() });

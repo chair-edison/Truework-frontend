@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Briefcase, CircleCheck, CircleDashed, CircleX, Clock, Info, LoaderCircle, LogIn, ScanSearch } from "lucide-react";
 import { fmt, label, useI18n } from "@/i18n";
-import { api, isAbort } from "@/lib/api";
+import { api, isAbort, USING_MOCK } from "@/lib/api";
 import { countryName, safeExternalUrl } from "@/lib/format";
 import { markCheckDone } from "@/lib/prefsLocal";
 import { track } from "@/lib/telemetry";
@@ -224,6 +224,7 @@ function Report({ check }: { check: JobCheckCompleted }) {
 
   return (
     <>
+      {USING_MOCK && <p className="banner banner--info"><Info size={18} aria-hidden /> <span>{dict.report.demoNotice}</span></p>}
       <VerificationSummary verification={v} />
       {v.policy_version && <p className="muted small">{fmt(dict.report.policy, { v: v.policy_version })}</p>}
 

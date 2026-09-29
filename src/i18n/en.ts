@@ -187,6 +187,7 @@ const en: Dict = {
     alternativesEmptyCta: "Browse jobs",
     newCheck: "New check",
     policy: "Policy v{v}",
+    demoNotice: "Demo mode result. This is a sample report regardless of what you submitted.",
   },
   saved: {
     title: "Saved jobs",
