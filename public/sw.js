@@ -1,6 +1,6 @@
 // Truework service worker — 앱 셸 캐시와 오프라인 대체 화면.
 // API 응답·업로드는 캐시하지 않는다(민감 정보 보호, 검증 결과는 항상 서버 최신값 사용).
-const VERSION = "tw-v1";
+const VERSION = "tw-v2"; // 아이콘 등 셸 자원이 바뀌면 올린다
 const SHELL = ["/jobs", "/check", "/saved", "/profile", "/offline.html", "/icons/icon.svg", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
