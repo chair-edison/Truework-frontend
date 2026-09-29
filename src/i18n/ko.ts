@@ -192,6 +192,7 @@ const ko = {
     alternativesEmptyCta: "공고 둘러보기",
     newCheck: "새 검사",
     policy: "판정 정책 v{v}",
+    demoNotice: "데모 모드 결과예요. 제출한 내용과 관계없이 예시 보고서를 보여줍니다.",
   },
   saved: {
     title: "저장한 공고",

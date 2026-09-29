@@ -3,7 +3,7 @@ import path from "node:path";
 import { ImageResponse } from "next/og";
 
 // PNG 아이콘은 public/icons/icon.svg 하나를 원본으로 렌더링한다(아이콘 교체 시 SVG 만 바꾸면 됨).
-const SIZES = new Set([180, 192, 512]);
+const SIZES = new Set([32, 180, 192, 512]);
 let svgDataUri: Promise<string> | null = null;
 
 function loadSvg() {

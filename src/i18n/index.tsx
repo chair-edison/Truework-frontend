@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { setApiLanguage } from "@/lib/api";
 import ko, { type Dict } from "./ko";
 import en from "./en";
 
@@ -21,6 +22,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, []);
   useEffect(() => {
     document.documentElement.lang = locale;
+    setApiLanguage(locale);
   }, [locale]);
   const setLocale = useCallback((l: Locale) => {
     setLocaleState(l);

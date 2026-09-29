@@ -1,6 +1,7 @@
 import type {
   AlternativesResponse,
   ApiErrorBody,
+  CheckLanguage,
   CreateJobCheckRequest,
   CreateJobCheckResponse,
   JobCheck,
@@ -64,6 +65,19 @@ export function configureAuth(getToken: () => Promise<string | null>, onUnauthor
   unauthorizedHandler = onUnauthorized;
 }
 
+// 서버가 생성하는 문구(요약·설명·근거)의 언어 힌트. I18nProvider 가 현재 언어로 갱신한다.
+let acceptLanguage = "ko";
+export function setApiLanguage(lang: string) {
+  acceptLanguage = lang;
+}
+
+/** UI 언어 코드 → 검사 language 파라미터 값 */
+export function toCheckLanguage(lang: string): CheckLanguage {
+  if (lang.startsWith("en")) return "english";
+  if (lang.startsWith("vi")) return "vietnamese";
+  return "korean";
+}
+
 function buildQuery(query?: Query) {
   const params = new URLSearchParams();
   for (const [k, v] of Object.entries(query ?? {})) {
@@ -76,7 +90,7 @@ function buildQuery(query?: Query) {
 
 async function request<T>(method: string, path: string, opts: RequestOptions = {}): Promise<T> {
   const url = API_PREFIX + path + buildQuery(opts.query);
-  const headers: Record<string, string> = { Accept: "application/json", ...opts.headers };
+  const headers: Record<string, string> = { Accept: "application/json", "Accept-Language": acceptLanguage, ...opts.headers };
   const token = await tokenGetter();
   if (token) headers.Authorization = `Bearer ${token}`;
 
@@ -139,8 +153,9 @@ export const api = {
 
   // Job checks (인증 필요)
   uploadScreenshot: (image: Blob) => request<UploadResponse>("POST", "/uploads/job-checks", { blob: image }),
-  createCheck: (body: CreateJobCheckRequest, idempotencyKey?: string) =>
+  createCheck: (body: CreateJobCheckRequest, idempotencyKey?: string, language: CheckLanguage = toCheckLanguage(acceptLanguage)) =>
     request<CreateJobCheckResponse>("POST", "/job-checks", {
+      query: { language },
       json: body,
       headers: idempotencyKey ? { "Idempotency-Key": idempotencyKey } : undefined,
     }),

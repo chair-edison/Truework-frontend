@@ -395,6 +395,8 @@ export async function handleMockRequest(
     if (rateLimited(uid(), "job-checks")) return fail(rid, 429, "RATE_LIMITED", "요청이 많습니다.", { retryable: true, headers: { "Retry-After": "60" } });
     const b = (body ?? {}) as { input_type?: string; content?: string; upload_id?: string };
     if (JSON.stringify(b).length > 21_000) return fail(rid, 413, "BODY_TOO_LARGE", "본문이 너무 큽니다.");
+    const lang = q.get("language");
+    if (lang !== null && !["english", "korean", "vietnamese"].includes(lang)) return invalid(rid, "language");
     const key = headers["Idempotency-Key"];
     if (key !== undefined && !/^[A-Za-z0-9_-]{8,128}$/.test(key)) return invalid(rid, "Idempotency-Key");
 

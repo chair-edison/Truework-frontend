@@ -28,6 +28,15 @@ test("모든 요청은 /api/v1 기본 경로를 쓰고 빈 쿼리는 보내지 �
   assert.equal(last().url, "https://api.truework.test/api/v1/jobs?q=Factory+worker&work_scope=OVERSEAS&sort=relevance&page=1&limit=20");
 });
 
+test("현재 UI 언어를 Accept-Language 로 보낸다", async () => {
+  const { setApiLanguage } = await import("../src/lib/api");
+  nextResponse = () => Response.json({ items: [], page: 1, limit: 20, total: 0, has_more: false, result_cap: null });
+  setApiLanguage("en");
+  await api.listJobs({});
+  assert.equal(headers(last())["Accept-Language"], "en");
+  setApiLanguage("ko");
+});
+
 test("토큰이 있으면 Bearer 로 보낸다", async () => {
   configureAuth(async () => "tok_123", () => {});
   nextResponse = () => Response.json({ saved: true });
@@ -54,6 +63,9 @@ test("검사 생성은 입력 유형에 맞는 필드만 보내고 Idempotency-K
   assert.deepEqual(JSON.parse(last().init.body as string), { input_type: "SCREENSHOT", upload_id: "u-1" });
   assert.equal(headers(last())["Idempotency-Key"], "chk_abcdefgh");
   assert.match(headers(last())["Idempotency-Key"], /^[A-Za-z0-9_-]{8,128}$/);
+  assert.ok(last().url.endsWith("/api/v1/job-checks?language=korean"), "기본 언어 korean");
+  await api.createCheck({ input_type: "TEXT", content: "x".repeat(30) }, undefined, "english");
+  assert.ok(last().url.endsWith("?language=english"));
 });
 
 test("오류 응답의 field_errors·retryable·request_id·Retry-After 를 해석한다", async () => {
