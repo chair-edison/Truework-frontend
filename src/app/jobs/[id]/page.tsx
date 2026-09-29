@@ -14,6 +14,7 @@ import { OriginalLinkButton } from "@/components/ExternalLink";
 import { ErrorState } from "@/components/States";
 import { useSaved } from "@/components/providers/SavedProvider";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { sourceTypeLabel } from "@/components/FilterSheet";
 
 const hostOf = (url: string | null | undefined) => {
   const safe = safeExternalUrl(url);
@@ -82,10 +83,10 @@ export default function JobDetailPage() {
   const salary = formatSalary(job.salary_min, job.salary_max, job.currency, intl);
   const requirements = toStringList(job.requirements);
   const originalOk = !!safeExternalUrl(job.source_url);
-  const sourceHost = hostOf(job.sources?.base_url) ?? hostOf(job.source_url);
+  const sourceHost = job.sources?.official_domain || hostOf(job.source_url);
   const companySite = safeExternalUrl(job.companies?.website ?? null);
   const sourceName = job.sources?.name ?? dict.common.unknown;
-  const sourceType = job.sources?.source_type ? label(dict.source, String(job.sources.source_type)) : null;
+  const sourceType = job.sources?.type ? sourceTypeLabel(dict, job.sources.type) : null;
 
   return (
     <div className="page page--detail">

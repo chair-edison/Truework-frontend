@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { toStatusKey } from "../src/lib/status";
-import { safeExternalUrl, formatSalary } from "../src/lib/format";
+import { safeExternalUrl, formatSalary, formatLocation } from "../src/lib/format";
 import { VERIFICATION_STATUSES, CHECK_PROGRESS } from "../src/lib/types";
 import { JOBS } from "../src/mocks/data";
 import ko from "../src/i18n/ko";
@@ -71,4 +71,11 @@ test("목 데이터가 Job 계약을 따른다", () => {
     assert.ok(Array.isArray(j.requirements));
     assert.ok(!j.published_at || !Number.isNaN(Date.parse(j.published_at)));
   }
+});
+
+test("location 에 국가명이 이미 있으면 반복하지 않는다", () => {
+  assert.equal(formatLocation("Pingtung, Taiwan", "TW", "en-US"), "Pingtung, Taiwan");
+  assert.equal(formatLocation("Germany", "DE", "ko-KR"), "Germany");
+  assert.equal(formatLocation("Hanoi", "VN", "en-US"), "Hanoi, Vietnam");
+  assert.equal(formatLocation(null, "VN", "en-US"), "Vietnam");
 });

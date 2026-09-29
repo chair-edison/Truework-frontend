@@ -58,7 +58,9 @@ function supabaseAdapter(client: SupabaseClient): AuthAdapter {
       return toSession(data.session)!;
     },
     async signUp(name, email, password) {
-      const { data, error } = await client.auth.signUp({ email, password, options: { data: { name } } });
+      // 인증 메일 링크가 이 앱의 로그인 화면으로 돌아오게 한다(Supabase Redirect URLs 에 등록 필요).
+      const emailRedirectTo = typeof window !== "undefined" ? `${window.location.origin}/login` : undefined;
+      const { data, error } = await client.auth.signUp({ email, password, options: { data: { name }, emailRedirectTo } });
       if (error) throw mapSbError(error);
       return { session: toSession(data.session), needsEmailConfirm: !data.session };
     },
@@ -114,8 +116,8 @@ function mockAdapter(): AuthAdapter {
 
 // ---------- 선택 ----------
 
-const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const SB_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+const SB_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").trim().replace(/\/+$/, "");
+const SB_KEY = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "").trim();
 
 function unconfiguredAdapter(): AuthAdapter {
   const fail = async (): Promise<never> => {

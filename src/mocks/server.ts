@@ -272,7 +272,7 @@ export async function handleMockRequest(
         (!kw || `${j.title} ${j.company_name} ${j.occupation ?? ""}`.toLowerCase().includes(kw)) &&
         (!q.get("location") || (j.location ?? "").toLowerCase().includes(q.get("location")!.toLowerCase())) &&
         eq("country", j.country) && eq("work_scope", j.work_scope) && eq("occupation", j.occupation) && eq("work_type", j.work_type) &&
-        eq("source_type", (j.sources?.source_type as string) ?? null) && eq("verification_status", j.verification_status) && eq("industry", j.industry),
+        eq("source_type", j.sources?.type ?? null) && eq("verification_status", j.verification_status) && eq("industry", j.industry),
     );
     let result_cap: number | null = null;
     const byNewest = (a: Job, b: Job) => (b.published_at ?? "").localeCompare(a.published_at ?? "");
