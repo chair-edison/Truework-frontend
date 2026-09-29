@@ -34,7 +34,7 @@ test("현재 UI 언어를 Accept-Language 로 보낸다", async () => {
   setApiLanguage("en");
   await api.listJobs({});
   assert.equal(headers(last())["Accept-Language"], "en");
-  setApiLanguage("ko");
+  setApiLanguage("en");
 });
 
 test("토큰이 있으면 Bearer 로 보낸다", async () => {
@@ -63,9 +63,9 @@ test("검사 생성은 입력 유형에 맞는 필드만 보내고 Idempotency-K
   assert.deepEqual(JSON.parse(last().init.body as string), { input_type: "SCREENSHOT", upload_id: "u-1" });
   assert.equal(headers(last())["Idempotency-Key"], "chk_abcdefgh");
   assert.match(headers(last())["Idempotency-Key"], /^[A-Za-z0-9_-]{8,128}$/);
-  assert.ok(last().url.endsWith("/api/v1/job-checks?language=korean"), "기본 언어 korean");
-  await api.createCheck({ input_type: "TEXT", content: "x".repeat(30) }, undefined, "english");
-  assert.ok(last().url.endsWith("?language=english"));
+  assert.ok(last().url.endsWith("/api/v1/job-checks?language=english"), "기본 언어 english");
+  await api.createCheck({ input_type: "TEXT", content: "x".repeat(30) }, undefined, "korean");
+  assert.ok(last().url.endsWith("?language=korean"));
 });
 
 test("오류 응답의 field_errors·retryable·request_id·Retry-After 를 해석한다", async () => {
