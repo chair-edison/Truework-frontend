@@ -8,17 +8,11 @@ export type Filters = Partial<Record<FilterKey, string>>;
 
 export const PAGE_LIMIT = 20;
 
-// 필터 선택지. occupation / work_type / source_type / industry 값은 서버 DB 값과 맞춰야 한다.
-// (API 명세에 값 목록이 없으므로 서버 메타 API가 생기면 교체)
-export const FILTER_OPTIONS: Record<FilterKey, string[]> = {
-  location: ["Ho Chi Minh City", "Hanoi", "Da Nang", "Hai Phong", "Bac Ninh", "Binh Duong", "Dong Nai", "Can Tho"],
-  country: ["VN", "KR", "JP", "TW"],
+// 고정 enum 필터. 나머지(country·occupation·work_type·industry·source_type·location)는
+// 서버 값이 자유 텍스트라 실제 공고 데이터에서 선택지를 만든다(useFilterOptions).
+export const STATIC_OPTIONS: Partial<Record<FilterKey, string[]>> = {
   work_scope: ["DOMESTIC", "OVERSEAS"],
-  occupation: ["MANUFACTURING", "LOGISTICS", "HOSPITALITY", "CARE", "OFFICE", "AGRICULTURE", "CONSTRUCTION", "RETAIL"],
-  work_type: ["FULL_TIME", "PART_TIME", "CONTRACT", "SEASONAL"],
-  source_type: ["GOVERNMENT", "EMPLOYER", "PARTNER", "JOB_BOARD"],
   verification_status: ["OFFICIAL", "VERIFIED_EMPLOYER", "UNVERIFIED", "WARNING"],
-  industry: ["ELECTRONICS", "TEXTILE", "FOOD", "LOGISTICS", "MACHINERY", "AUTOMOTIVE", "TOURISM", "HEALTHCARE", "CONSTRUCTION", "AGRICULTURE", "IT", "RETAIL"],
 };
 
 export function readFilters(sp: URLSearchParams): Filters {

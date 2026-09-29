@@ -352,7 +352,16 @@ export const JOBS: Job[] = seeds.map((s, i) => {
     retrieved_at: s.posted_at,
     last_verified_at: s.v === "UNVERIFIED" ? null : iso(1),
     active: true,
-    sources: { id: sid, name: s.source.name, source_type: s.source.type, base_url: s.source.url ?? null, active: true },
+    sources: {
+      id: sid,
+      name: s.source.name,
+      type: s.source.type.charAt(0) + s.source.type.slice(1).toLowerCase().replace(/_/g, " "), // 예: "Government"
+      official_domain: s.source.url ? new URL(s.source.url).host : null,
+      verification_level: s.v === "OFFICIAL" ? "OFFICIAL" : null,
+      country: s.location.country,
+      last_checked_at: iso(1),
+      active: true,
+    },
     companies: hasCompany ? { id: cid, name: s.company_name, website: null } : null,
   };
 });

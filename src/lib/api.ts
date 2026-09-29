@@ -14,8 +14,13 @@ import type {
   UploadResponse,
 } from "./types";
 
-const ORIGIN = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
-export const USING_MOCK = ORIGIN === "";
+// 연결 방식
+// - NEXT_PUBLIC_API_PROXY=true : same-origin /api/v1 프록시(src/app/api/v1) 경유 → 서버가 BACKEND_URL 로 전달
+// - NEXT_PUBLIC_API_BASE_URL   : 브라우저가 백엔드에 직접 요청(백엔드 CORS 에 origin 등록 필요)
+// - 둘 다 없으면 목 API
+const USE_PROXY = process.env.NEXT_PUBLIC_API_PROXY === "true";
+const ORIGIN = USE_PROXY ? "" : (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
+export const USING_MOCK = !USE_PROXY && ORIGIN === "";
 const API_PREFIX = "/api/v1";
 
 export class ApiError extends Error {

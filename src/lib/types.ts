@@ -34,8 +34,12 @@ export type ApiErrorBody = {
 export type JobSourceRow = {
   id?: string;
   name?: string | null;
-  source_type?: string | null;
-  base_url?: string | null;
+  /** 출처 유형 (예: "Government"). GET /jobs 의 source_type 필터 값과 같다. */
+  type?: string | null;
+  official_domain?: string | null;
+  verification_level?: string | null;
+  country?: string | null;
+  last_checked_at?: string | null;
   active?: boolean;
   [key: string]: unknown;
 };

@@ -10,8 +10,12 @@ export function countryName(code: string, intl: string) {
 
 export function formatLocation(location: string | null | undefined, country: string | null | undefined, intl: string) {
   const c = country ? countryName(country, intl) : "";
-  if (location && c && !location.toLowerCase().includes(c.toLowerCase())) return `${location}, ${c}`;
-  return location || c || "";
+  if (!location) return c;
+  if (!country) return location;
+  // 서버 location 에 이미 국가명이 들어 있으면(예: "Pingtung, Taiwan") 반복하지 않는다.
+  const lower = location.toLowerCase();
+  const names = [c, countryName(country, "en")].map((n) => n.toLowerCase());
+  return names.some((n) => n && lower.includes(n)) ? location : `${location}, ${c}`;
 }
 
 export function formatMoney(amount: number, currency: string, intl: string) {
