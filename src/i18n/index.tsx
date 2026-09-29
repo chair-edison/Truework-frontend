@@ -13,7 +13,7 @@ const I18nContext = createContext<Ctx | null>(null);
 const KEY = "tw.locale";
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("ko");
+  const [locale, setLocaleState] = useState<Locale>("en");
   useEffect(() => {
     try {
       const saved = localStorage.getItem(KEY) as Locale | null;

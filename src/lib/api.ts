@@ -66,7 +66,7 @@ export function configureAuth(getToken: () => Promise<string | null>, onUnauthor
 }
 
 // 서버가 생성하는 문구(요약·설명·근거)의 언어 힌트. I18nProvider 가 현재 언어로 갱신한다.
-let acceptLanguage = "ko";
+let acceptLanguage = "en";
 export function setApiLanguage(lang: string) {
   acceptLanguage = lang;
 }
